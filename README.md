@@ -12,16 +12,56 @@ $ npm install nest-mqtt
 
 ## Usage
 
+### Import
+
 ```typescript
 // app.module.ts
 import { Module } from '@nestjs/common';
 import { MqttModule } from 'nest-mqtt';
 
 @Module({
-  imports: [MqttModule.listen(options)]
+  imports: [MqttModule.forRoot(options)]
 })
 export class AppModule {}
 ```
+
+### Subscribe
+
+You can define any subscriber or consumer in provider. For example,
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { Subscribe } from 'nest-mqtt';
+
+@Injectable()
+export class TestService {
+  @Subscribe('test')
+  test() {
+  
+  }
+}
+```
+
+Also, you can inject parameter with decorator:
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { Subscribe, Payload } from 'nest-mqtt';
+
+@Injectable()
+export class TestService {
+  @Subscribe('test')
+  test(@Payload payload) {
+    console.log(payload);
+  }
+}
+```
+
+### Publish
+
+Nest-mqtt wrap some functions with `Promise` and provide a provider.
+
+## Emqtt Compatible
 
 ## Support
 
