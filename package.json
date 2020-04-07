@@ -1,11 +1,19 @@
 {
   "name": "nest-mqtt",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "A MQTT module for Nest.js",
+  "author": "microud",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/microud/nest-mqtt"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\"",
