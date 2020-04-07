@@ -81,9 +81,7 @@ export class MqttExplorer implements OnModuleInit {
       (topic: string, payload: Buffer, packet: Packet) => {
         const subscriber = this.getSubscriber(topic);
         if (subscriber) {
-          const parameters = subscriber.parameters.sort(
-            (a, b) => a.index - b.index,
-          );
+          const parameters = subscriber.parameters || [];
           const scatterParameters: IMqttSubscriberParameter[] = [];
           for (const parameter of parameters) {
             scatterParameters[parameter.index] = parameter;
