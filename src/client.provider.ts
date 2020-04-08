@@ -1,24 +1,41 @@
-import { Logger, Provider } from '@nestjs/common';
+import { Provider, Logger } from '@nestjs/common';
 import { connect } from 'mqtt';
-import { IMqttOptions } from './mqtt.interface';
-import { MQTT_CLIENT_INSTANCE } from './mqtt.constants';
+import { IMqttModuleOptions } from './mqtt.interface';
+import { MQTT_CLIENT_INSTANCE, MQTT_OPTION_PROVIDER, MQTT_LOGGER_PROVIDER } from './mqtt.constants';
 
-export function createClientProvider(options: IMqttOptions): Provider {
+export function createClientProvider(): Provider {
   return {
     provide: MQTT_CLIENT_INSTANCE,
-    useFactory: (logger: Logger) => {
-      const client = connect(`mqtt://${options.host}`, options);
+    useFactory: (options: IMqttModuleOptions, logger: Logger) => {
+      logger.setContext('MqttClientProvider');
+      const client = connect(options);
 
       client.on('connect', () => {
-        logger.log('MQTT Connected');
+        logger.log('MQTT connected');
+        // console.log(packet);
       });
 
-      client.on('disconnect', () => {
+      client.on('disconnect', packet => {
+        logger.log('MQTT disconnected');
+      });
 
+      client.on('error', error => {
+      });
+
+      client.on('reconnect', () => {
+        logger.log('MQTT reconnecting');
+      });
+
+      client.on('close', error => {
+        logger.log('MQTT closed');
+      });
+
+      client.on('offline', () => {
+        logger.log('MQTT offline');
       });
 
       return client;
     },
-    inject: [Logger],
+    inject: [MQTT_OPTION_PROVIDER, MQTT_LOGGER_PROVIDER],
   };
 }

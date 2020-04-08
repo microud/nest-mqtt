@@ -1,25 +1,25 @@
 import { CustomDecorator, SetMetadata } from '@nestjs/common';
 import {
-  MQTT_SUBSCRIBE_TOPIC,
+  MQTT_SUBSCRIBE_OPTIONS,
   MQTT_SUBSCRIBER_PARAMS,
 } from './mqtt.constants';
 import {
   IMqttMessageTransformer,
-  IMqttSubscriberParameter,
+  MqttSubscriberParameter,
 } from './mqtt.interface';
 
-export function Subscribe(topic: string | string[] | IMqttSubscriberParameter): CustomDecorator;
+export function Subscribe(topic: string | string[] | MqttSubscriberParameter): CustomDecorator;
 export function Subscribe(topicOrOptions): CustomDecorator {
   if (typeof topicOrOptions === 'string' || Array.isArray(topicOrOptions)) {
-    return SetMetadata(MQTT_SUBSCRIBE_TOPIC, {
+    return SetMetadata(MQTT_SUBSCRIBE_OPTIONS, {
       topic: topicOrOptions,
     });
   } else {
-    return SetMetadata(MQTT_SUBSCRIBE_TOPIC, topicOrOptions);
+    return SetMetadata(MQTT_SUBSCRIBE_OPTIONS, topicOrOptions);
   }
 }
 
-function SetParameter(parameter: Partial<IMqttSubscriberParameter>) {
+function SetParameter(parameter: Partial<MqttSubscriberParameter>) {
   return (
     target: object,
     propertyKey: string | symbol,
@@ -35,18 +35,31 @@ function SetParameter(parameter: Partial<IMqttSubscriberParameter>) {
   };
 }
 
+/**
+ * Take the topic in parameters.
+ * @constructor
+ */
 export function Topic() {
   return SetParameter({
     type: 'topic',
   });
 }
 
+/**
+ * Take the raw packet in parameters.
+ * @constructor
+ */
 export function Packet() {
   return SetParameter({
     type: 'packet',
   });
 }
 
+/**
+ * Take the payload in parameters.
+ * @param transform
+ * @constructor
+ */
 export function Payload(transform?: 'json' | 'text' | IMqttMessageTransformer) {
   return SetParameter({
     type: 'payload',
@@ -54,6 +67,11 @@ export function Payload(transform?: 'json' | 'text' | IMqttMessageTransformer) {
   });
 }
 
+/**
+ * Take an array as parameter of a topic with wildcard.
+ * Such like topic: foo/+/bar/+, you will get an array like:
+ * ['first', 'second']
+ */
 export function Params() {
   return SetParameter({
     type: 'params',
