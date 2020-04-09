@@ -2,21 +2,18 @@ import {
   DynamicModule,
   Global,
   Module,
-  Provider,
 } from '@nestjs/common';
 import { MqttService } from './mqtt.service';
 import { createClientProvider } from './client.provider';
-// import { createLoggerProvider } from './logger.provider';
 import { MqttExplorer } from './mqtt.explorer';
 import { DiscoveryModule } from '@nestjs/core';
-import { createOptionProviders } from './options.provider';
+import { createLoggerProvider, createOptionProviders } from './options.provider';
 import {
   MqttModuleAsyncOptions,
-  IMqttModuleOptions,
-  MqttOptionsFactory,
+  IMqttModuleOptions, MqttModuleOptions,
 } from './mqtt.interface';
 import {
-  MQTT_CLIENT_INSTANCE,
+  MQTT_LOGGER_PROVIDER,
   MQTT_OPTION_PROVIDER,
 } from './mqtt.constants';
 
@@ -32,7 +29,12 @@ export class MqttModule {
       module: MqttModule,
       providers: [
         ...createOptionProviders(options),
-        // createLoggerProvider(options.loggerClass),
+        {
+          provide: MQTT_LOGGER_PROVIDER,
+          useFactory: (moduleOptions: MqttModuleOptions) =>
+            createLoggerProvider(moduleOptions),
+          inject: [MQTT_OPTION_PROVIDER],
+        },
         createClientProvider(),
         MqttExplorer,
         MqttService,
@@ -49,7 +51,7 @@ export class MqttModule {
           provide: MQTT_OPTION_PROVIDER,
           useValue: options,
         },
-        // createLoggerProvider(options.loggerClass),
+        createLoggerProvider(options),
         createClientProvider(),
         MqttExplorer,
         MqttService,

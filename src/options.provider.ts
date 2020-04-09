@@ -1,6 +1,6 @@
-import { MqttModuleAsyncOptions, MqttOptionsFactory } from './mqtt.interface';
-import { Provider } from '@nestjs/common';
-import { MQTT_CLIENT_INSTANCE, MQTT_OPTION_PROVIDER } from './mqtt.constants';
+import { MqttModuleAsyncOptions, MqttModuleOptions, MqttOptionsFactory } from './mqtt.interface';
+import { Logger, Provider } from '@nestjs/common';
+import { MQTT_CLIENT_INSTANCE, MQTT_LOGGER_PROVIDER, MQTT_OPTION_PROVIDER } from './mqtt.constants';
 
 export function createOptionsProvider(
   options: MqttModuleAsyncOptions,
@@ -41,4 +41,25 @@ export function createOptionProviders(
       useClass: options.useClass,
     },
   ];
+}
+
+export function createLoggerProvider(options: MqttModuleOptions): Provider {
+  if (!options.logger) {
+    return {
+      provide: MQTT_LOGGER_PROVIDER,
+      useValue: new Logger('MqttModule'),
+    };
+  } else {
+    if (options.logger.useClass) {
+      return {
+        provide: MQTT_LOGGER_PROVIDER,
+        useClass: options.logger.useClass,
+      };
+    } else {
+      return {
+        provide: MQTT_LOGGER_PROVIDER,
+        useValue: options.logger.useValue,
+      };
+    }
+  }
 }

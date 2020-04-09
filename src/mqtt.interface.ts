@@ -1,5 +1,5 @@
 import { IClientOptions } from 'mqtt';
-import { FactoryProvider, LoggerService, Type } from '@nestjs/common';
+import { LoggerService, Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
 
 export type IMqttMessageTransformer = (payload: Buffer) => any;
@@ -46,6 +46,11 @@ export interface MqttSubscriber {
   parameters: MqttSubscriberParameter[];
 }
 
+export interface MqttLoggerOptions {
+  useValue?: LoggerService;
+  useClass?: Type<LoggerService>;
+}
+
 export interface MqttModuleOptions extends IClientOptions {
   /**
    * Global queue subscribe.
@@ -63,7 +68,7 @@ export interface MqttModuleOptions extends IClientOptions {
    */
   shared?: string;
 
-  logger?: LoggerService;
+  logger?: MqttLoggerOptions;
 }
 
 export interface MqttOptionsFactory {
