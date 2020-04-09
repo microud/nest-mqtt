@@ -2,39 +2,21 @@ import { IClientOptions } from 'mqtt';
 import { LoggerService, Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
 
-export type IMqttMessageTransformer = (payload: Buffer) => any;
+export type MqttMessageTransformer = (payload: Buffer) => any;
 
 export type LoggerConstructor = new (...params) => LoggerService;
-
-export interface IMqttModuleOptions extends IClientOptions {
-  /**
-   * Global queue subscribe.
-   * All topic will be prepend '$queue/' prefix automatically.
-   * More information is here:
-   * https://docs.emqx.io/broker/latest/cn/advanced/shared-subscriptions.html
-   */
-  queue?: boolean;
-
-  /**
-   * Global shared subscribe.
-   * All topic will be prepend '$shared/group/' prefix automatically.
-   * More information is here:
-   * https://docs.emqx.io/broker/latest/cn/advanced/shared-subscriptions.html
-   */
-  shared?: string;
-}
 
 export interface MqttSubscribeOptions {
   topic: string | string[];
   queue?: boolean;
-  shared?: string;
-  transform?: 'json' | 'text' | IMqttMessageTransformer;
+  share?: string;
+  transform?: 'json' | 'text' | MqttMessageTransformer;
 }
 
 export interface MqttSubscriberParameter {
   index: number;
   type: 'payload' | 'topic' | 'packet' | 'params';
-  transform?: 'json' | 'text' | IMqttMessageTransformer;
+  transform?: 'json' | 'text' | MqttMessageTransformer;
 }
 
 export interface MqttSubscriber {
@@ -62,11 +44,11 @@ export interface MqttModuleOptions extends IClientOptions {
 
   /**
    * Global shared subscribe.
-   * All topic will be prepend '$shared/group/' prefix automatically.
+   * All topic will be prepend '$share/group/' prefix automatically.
    * More information is here:
    * https://docs.emqx.io/broker/latest/cn/advanced/shared-subscriptions.html
    */
-  shared?: string;
+  share?: string;
 
   logger?: MqttLoggerOptions;
 }
@@ -83,4 +65,5 @@ export interface MqttModuleAsyncOptions
   useFactory?: (
     ...args: any[]
   ) => Promise<MqttModuleOptions> | MqttModuleOptions;
+  logger?: MqttLoggerOptions;
 }

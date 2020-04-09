@@ -1,13 +1,12 @@
 import { Provider, Logger } from '@nestjs/common';
 import { connect } from 'mqtt';
-import { IMqttModuleOptions } from './mqtt.interface';
+import { MqttModuleOptions } from './mqtt.interface';
 import { MQTT_CLIENT_INSTANCE, MQTT_OPTION_PROVIDER, MQTT_LOGGER_PROVIDER } from './mqtt.constants';
 
 export function createClientProvider(): Provider {
   return {
     provide: MQTT_CLIENT_INSTANCE,
-    useFactory: (options: IMqttModuleOptions, logger: Logger) => {
-      logger.setContext('MqttClientProvider');
+    useFactory: (options: MqttModuleOptions, logger: Logger) => {
       const client = connect(options);
 
       client.on('connect', () => {

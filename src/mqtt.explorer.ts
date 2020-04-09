@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import {
-  MQTT_CLIENT_INSTANCE, MQTT_OPTION_PROVIDER,
+  MQTT_CLIENT_INSTANCE, MQTT_LOGGER_PROVIDER, MQTT_OPTION_PROVIDER,
   MQTT_SUBSCRIBE_OPTIONS,
   MQTT_SUBSCRIBER_PARAMS,
 } from './mqtt.constants';
@@ -23,7 +23,7 @@ export class MqttExplorer implements OnModuleInit {
   constructor(
     private readonly discoveryService: DiscoveryService,
     private readonly metadataScanner: MetadataScanner,
-    private readonly logger: Logger,
+    @Inject(MQTT_LOGGER_PROVIDER) private readonly logger: Logger,
     private readonly reflector: Reflector,
     @Inject(MQTT_CLIENT_INSTANCE) private readonly client: Client,
     @Inject(MQTT_OPTION_PROVIDER) private readonly options: MqttModuleOptions,
@@ -39,20 +39,23 @@ export class MqttExplorer implements OnModuleInit {
   preprocess(options: MqttSubscribeOptions): string | string[] {
     const processTopic = (topic) => {
       const queue = typeof options.queue === 'boolean' ? options.queue : this.options.queue;
-      const shared = typeof options.shared === 'string' ? options.shared : this.options.shared;
+      const share = typeof options.share === 'string' ? options.share : this.options.share;
       topic = topic.replace('$queue/', '')
         .replace(/^\$share\/([A-Za-z0-9]+)\//, '');
       if (queue) {
         return `$queue/${topic}`;
       }
 
-      if (shared) {
-        return `$shared/${shared}/${topic}`;
+      if (share) {
+        return `$share/${share}/${topic}`;
       }
+
+      return topic;
     };
     if (Array.isArray(options.topic)) {
       return options.topic.map(processTopic);
     } else {
+      // this.logger.log(options.topic);
       return processTopic(options.topic);
     }
   }

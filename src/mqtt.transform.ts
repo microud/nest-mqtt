@@ -1,15 +1,15 @@
-import { IMqttMessageTransformer } from './mqtt.interface';
+import { MqttMessageTransformer } from './mqtt.interface';
 
-export const JsonTransform: IMqttMessageTransformer = payload => {
+export const JsonTransform: MqttMessageTransformer = payload => {
   return JSON.parse(payload.toString('utf-8'));
 };
 
-export const TextTransform: IMqttMessageTransformer = payload => {
+export const TextTransform: MqttMessageTransformer = payload => {
   return payload.toString('utf-8');
 };
 
 export function getTransform(
-  transform: 'json' | 'text' | IMqttMessageTransformer,
+  transform: 'json' | 'text' | MqttMessageTransformer,
 ) {
   if (typeof transform === 'function') {
     return transform;

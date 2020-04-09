@@ -10,7 +10,7 @@ import { DiscoveryModule } from '@nestjs/core';
 import { createLoggerProvider, createOptionProviders } from './options.provider';
 import {
   MqttModuleAsyncOptions,
-  IMqttModuleOptions, MqttModuleOptions,
+  MqttModuleOptions,
 } from './mqtt.interface';
 import {
   MQTT_LOGGER_PROVIDER,
@@ -29,12 +29,7 @@ export class MqttModule {
       module: MqttModule,
       providers: [
         ...createOptionProviders(options),
-        {
-          provide: MQTT_LOGGER_PROVIDER,
-          useFactory: (moduleOptions: MqttModuleOptions) =>
-            createLoggerProvider(moduleOptions),
-          inject: [MQTT_OPTION_PROVIDER],
-        },
+        createLoggerProvider(options),
         createClientProvider(),
         MqttExplorer,
         MqttService,
@@ -43,7 +38,7 @@ export class MqttModule {
     };
   }
 
-  public static forRoot(options: IMqttModuleOptions): DynamicModule {
+  public static forRoot(options: MqttModuleOptions): DynamicModule {
     return {
       module: MqttModule,
       providers: [

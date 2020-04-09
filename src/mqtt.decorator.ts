@@ -4,11 +4,12 @@ import {
   MQTT_SUBSCRIBER_PARAMS,
 } from './mqtt.constants';
 import {
-  IMqttMessageTransformer,
+  MqttMessageTransformer,
+  MqttSubscribeOptions,
   MqttSubscriberParameter,
 } from './mqtt.interface';
 
-export function Subscribe(topic: string | string[] | MqttSubscriberParameter): CustomDecorator;
+export function Subscribe(topic: string | string[] | MqttSubscribeOptions): CustomDecorator;
 export function Subscribe(topicOrOptions): CustomDecorator {
   if (typeof topicOrOptions === 'string' || Array.isArray(topicOrOptions)) {
     return SetMetadata(MQTT_SUBSCRIBE_OPTIONS, {
@@ -60,7 +61,7 @@ export function Packet() {
  * @param transform
  * @constructor
  */
-export function Payload(transform?: 'json' | 'text' | IMqttMessageTransformer) {
+export function Payload(transform?: 'json' | 'text' | MqttMessageTransformer) {
   return SetParameter({
     type: 'payload',
     transform,

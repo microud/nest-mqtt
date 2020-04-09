@@ -43,7 +43,7 @@ export function createOptionProviders(
   ];
 }
 
-export function createLoggerProvider(options: MqttModuleOptions): Provider {
+export function createLoggerProvider(options: MqttModuleOptions | MqttModuleAsyncOptions): Provider {
   if (!options.logger) {
     return {
       provide: MQTT_LOGGER_PROVIDER,
