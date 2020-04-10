@@ -60,7 +60,7 @@ export class MqttExplorer implements OnModuleInit {
     }
   }
 
-  subscribe(options: MqttSubscribeOptions, parameters: MqttSubscriberParameter[], handle) {
+  subscribe(options: MqttSubscribeOptions, parameters: MqttSubscriberParameter[], handle, provider) {
     this.client.subscribe(this.preprocess(options), err => {
       if (!err) {
         // put it into this.subscribers;
@@ -71,6 +71,7 @@ export class MqttExplorer implements OnModuleInit {
               route: topic.replace('$queue/', '')
                 .replace(/^\$share\/([A-Za-z0-9]+)\//, ''),
               regexp: MqttExplorer.topicToRegexp(topic),
+              provider,
               handle,
               options,
               parameters,
@@ -104,7 +105,7 @@ export class MqttExplorer implements OnModuleInit {
             instance[key],
           );
           if (subscribeOptions) {
-            this.subscribe(subscribeOptions, parameters, instance[key]);
+            this.subscribe(subscribeOptions, parameters, instance[key], instance);
           }
         },
       );
@@ -120,7 +121,7 @@ export class MqttExplorer implements OnModuleInit {
             scatterParameters[parameter.index] = parameter;
           }
           const transform = getTransform(subscriber.options.transform);
-          subscriber.handle(
+          subscriber.handle.bind(subscriber.provider)(
             ...scatterParameters.map(parameter => {
               switch (parameter?.type) {
                 case 'payload':

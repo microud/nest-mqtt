@@ -23,6 +23,7 @@ export interface MqttSubscriber {
   topic: string;
   handle: any;
   route: string;
+  provider: any;
   regexp: RegExp;
   options: MqttSubscribeOptions;
   parameters: MqttSubscriberParameter[];
