@@ -120,23 +120,27 @@ export class MqttExplorer implements OnModuleInit {
           for (const parameter of parameters) {
             scatterParameters[parameter.index] = parameter;
           }
-          const transform = getTransform(subscriber.options.transform);
-          subscriber.handle.bind(subscriber.provider)(
-            ...scatterParameters.map(parameter => {
-              switch (parameter?.type) {
-                case 'payload':
-                  return transform(payload);
-                case 'topic':
-                  return topic;
-                case 'packet':
-                  return packet;
-                case 'params':
-                  return MqttExplorer.matchGroups(topic, subscriber.regexp);
-                default:
-                  return null;
-              }
-            }),
-          );
+          try {
+            const transform = getTransform(subscriber.options.transform);
+            subscriber.handle.bind(subscriber.provider)(
+              ...scatterParameters.map(parameter => {
+                switch (parameter?.type) {
+                  case 'payload':
+                    return transform(payload);
+                  case 'topic':
+                    return topic;
+                  case 'packet':
+                    return packet;
+                  case 'params':
+                    return MqttExplorer.matchGroups(topic, subscriber.regexp);
+                  default:
+                    return null;
+                }
+              }),
+            );
+          } catch (err) {
+            this.logger.error(err);
+          }
         }
       },
     );
