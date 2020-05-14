@@ -7,7 +7,7 @@ A MQTT module for Nest.js. Compatible with emqtt.
 ## Installation
 
 ```bash
-$ npm install nest-mqtt
+$ npm install nest-mqtt --save
 ```
 
 ## Usage
