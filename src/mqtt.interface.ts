@@ -1,4 +1,4 @@
-import { IClientOptions } from 'mqtt';
+import { IClientOptions, Packet } from 'mqtt';
 import { LoggerService, Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
 
@@ -52,6 +52,8 @@ export interface MqttModuleOptions extends IClientOptions {
   share?: string;
 
   logger?: MqttLoggerOptions;
+
+  beforeHandle?: (topic: string, payload: Buffer, packet: Packet) => any;
 }
 
 export interface MqttOptionsFactory {

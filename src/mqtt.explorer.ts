@@ -122,6 +122,12 @@ export class MqttExplorer implements OnModuleInit {
           }
           try {
             const transform = getTransform(subscriber.options.transform);
+
+            // add a option to do something before handle message.
+            if (this.options.beforeHandle) {
+              this.options.beforeHandle(topic, payload, packet);
+            }
+
             subscriber.handle.bind(subscriber.provider)(
               ...scatterParameters.map(parameter => {
                 switch (parameter?.type) {
