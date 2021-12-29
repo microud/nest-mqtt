@@ -20,15 +20,17 @@ import {
 export class MqttExplorer implements OnModuleInit {
   subscribers: MqttSubscriber[];
 
+  private readonly reflector: Reflector;
+
   constructor(
     private readonly discoveryService: DiscoveryService,
     private readonly metadataScanner: MetadataScanner,
     @Inject(MQTT_LOGGER_PROVIDER) private readonly logger: Logger,
-    private readonly reflector: Reflector,
     @Inject(MQTT_CLIENT_INSTANCE) private readonly client: Client,
     @Inject(MQTT_OPTION_PROVIDER) private readonly options: MqttModuleOptions,
   ) {
     this.subscribers = [];
+    this.reflector = new Reflector();
   }
 
   onModuleInit() {

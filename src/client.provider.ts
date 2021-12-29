@@ -19,6 +19,7 @@ export function createClientProvider(): Provider {
       });
 
       client.on('error', error => {
+        logger.error(error);
       });
 
       client.on('reconnect', () => {
