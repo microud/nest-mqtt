@@ -13,7 +13,6 @@ import {
   MqttModuleOptions,
 } from './mqtt.interface';
 import {
-  MQTT_LOGGER_PROVIDER,
   MQTT_OPTION_PROVIDER,
 } from './mqtt.constants';
 
@@ -34,7 +33,6 @@ export class MqttModule {
         MqttExplorer,
         MqttService,
       ],
-      exports: [],
     };
   }
 
@@ -51,7 +49,6 @@ export class MqttModule {
         MqttExplorer,
         MqttService,
       ],
-      exports: [],
     };
   }
 }
