@@ -1,6 +1,6 @@
 {
   "name": "nest-mqtt",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "A MQTT module for Nest.js",
   "author": "microud",
   "license": "MIT",
@@ -31,12 +31,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
-  "dependencies": {
-    "mqtt": "4.3.1"
-  },
   "peerDependencies": {
     "@nestjs/common": "^6.10.11 || ^7.0.0 || ^8.0.0",
-    "@nestjs/core": "^6.10.11 || ^7.0.0 || ^8.0.0"
+    "@nestjs/core": "^6.10.11 || ^7.0.0 || ^8.0.0",
+    "mqtt": "^3.0.0"
   },
   "devDependencies": {
     "@nestjs/common": "^8.0.0",
@@ -50,10 +48,10 @@
     "prettier": "1.17.0",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
-    "rxjs": "^6.3.3",
-    "supertest": "4.0.2",
-    "ts-jest": "24.0.2",
-    "ts-node": "8.1.0",
+    "rxjs": "^7.2.0",
+    "supertest": "^6.1.3",
+    "ts-jest": "^27.0.3",
+    "ts-node": "^10.0.0",
     "tsc-watch": "2.2.1",
     "tsconfig-paths": "3.8.0",
     "tslint": "5.16.0",
