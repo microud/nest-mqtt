@@ -54,6 +54,8 @@ export interface MqttModuleOptions extends IClientOptions {
   logger?: MqttLoggerOptions;
 
   beforeHandle?: (topic: string, payload: Buffer, packet: Packet) => any;
+
+  instance?: string;
 }
 
 export interface MqttOptionsFactory {
