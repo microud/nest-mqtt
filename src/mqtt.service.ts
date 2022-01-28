@@ -1,12 +1,16 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
 import { MQTT_CLIENT_INSTANCE } from './mqtt.constants';
 import { Client, Packet, IClientPublishOptions, IClientSubscribeOptions, ISubscriptionGrant } from 'mqtt';
 
 @Injectable()
-export class MqttService {
+export class MqttService implements OnModuleDestroy {
   constructor(
     @Inject(MQTT_CLIENT_INSTANCE) private readonly client: Client,
   ) {}
+
+  onModuleDestroy() {
+    this.client.end();
+  }
 
   subscribe(topic: string | string[], opts?: IClientSubscribeOptions): Promise<ISubscriptionGrant[]> {
     return new Promise((resolve, reject) => {
