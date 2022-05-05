@@ -34,9 +34,6 @@ export class MqttService {
 
   publish(topic: string, message: string | Buffer | object, opts?: IClientPublishOptions): Promise<Packet> {
     return new Promise<Packet>((resolve, reject) => {
-      if (typeof message === 'object') {
-        message = JSON.stringify(message);
-      }
       this.client.publish(topic, message, opts || null, (error, packet) => {
         if (error) {
           reject(error);
